@@ -1,0 +1,12 @@
+1. iterate all fisheyes
+FLow:
+	1. resize - origins are now not resized - doesnt seem to be a problem
+	2. compare histograms, delete if needed
+	3. switch RGB to HSV
+	4. save new fisheye
+	5. creating dict object
+	- do that for all files
+DONE, TESTED, OK
+
+new todos 2.12. 16:44 :
+	1. spytat sa Lucneho nato ako tvorit zmysluplne histogramy, nieco si o tom precitat
