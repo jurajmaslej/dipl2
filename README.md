@@ -34,6 +34,31 @@ výpočty potrebné pre spracovanie dát, bude poskytnuté.
 - vytvorenie masky na filtráciu oblohy
 - trénovanie kernelu konvolučnej siete
 
+### Postup implementácie
+ Loader súbory: load_camera, load_synops, main_loader
+ Načítavajú fisheye snímky a synopy
+ Pomocné súbory:
+ helper - metódy zdieľané medzi viacerými súbormi
+ histogram_comparer - porovnávanie histogramov
+ concepts - trash folder pre nápady
+ 
+### Úprava vstupných dát
+
+#### Synopy
+K dispozícií máme meteorologické dátat z 2 lokalít, z nich dostávame synopy.
+Výsledkom su 2 slovníky, kľúčom je dátum, hodnota je synopa.
+Pridali sme tretí, ktorý je priemerom synop.
+#### Fotky
+Fotografie sú z kamery s rybím okom. Zmenšujeme ich na rozmer 150x150.
+Súbor fotografií je filtrovaný na denné fotografie.
+V súbore sa tiež nachádzalo značné množstvo fotografii, kde bola kamera nevyhovujúco otočená (zem vs. obloha)
+Tieto fotografie odstraňujeme pomocou porovnávanie histogramov.
+Prevádzame na HSV formát. Následne vytvoríme slovník kde kľúčom je dátum s rovnakom formate ako pri synopách, hodnotou je fotografia načítaná pomocou openCV.
+Ďalej obdobný slovník vytvárame s histogrammi fotografíí už prevdných do HSV spektra.
+
+### Plánované postupy
+Pracujeme na použití vhodného machine learning modelu na kategorizáiu oblačnosti na fotkách vzhľadom k ich histogramom. Toto riešenie má slúžiť ako baseline pre následné vystavanie modelu konvolučnej neurónovej siete
+
 ### Literatúra
  Ryo Onishi, Deep convolutional neural network for cloud estimation from snapshot camera images, 2017<br>
  Le Goff, Deep learning for cloud detection, 2017<br>
