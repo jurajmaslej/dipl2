@@ -31,11 +31,15 @@ class Hsv:
 		# extract a 3D RGB color histogram from the image,
 		# using 8 bins per channel, normalize, and update
 		# the index
-		hist = cv.calcHist([image], [0, 1], None, [8, 16], [0, 180, 0, 256])
+		try:
+			hist = cv.calcHist([image], [0, 1], None, [8, 16], [0, 180, 0, 256])
 		#print('len hist not flattend ' + str(len(hist)))
 		#print('len hist[0] not flattend ' + str(len(hist[0])))
-		hist = cv.normalize(hist, None).flatten()
-		return hist
+			hist = cv.normalize(hist, None).flatten()
+			return hist
+		except:
+			print('hist not created')
+			pass
 	
 	def compare_histograms(self, h1, h2):
 		result = cv.compareHist(h1, h2, cv.HISTCMP_CHISQR)

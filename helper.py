@@ -1,5 +1,5 @@
 from __future__ import division
-from datetime import datetime
+import datetime
 
 class Helper():
 	
@@ -16,7 +16,7 @@ class Helper():
 					#print(' del hour ' + str(timest.hour))
 					del data[k]
 			except:
-				print('daytime strip not worked ' + str(k))
+				#print('daytime strip not worked ' + str(k))
 				self.err_count += 1
 		return data
 	

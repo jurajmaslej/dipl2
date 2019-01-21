@@ -1,0 +1,2 @@
+1. gettin only first photo for tstamp even if i have multiple
+2. synops_avg - get floats instead of range(0,8)

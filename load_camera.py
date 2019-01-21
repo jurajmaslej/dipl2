@@ -142,7 +142,8 @@ class Load_camera(Helper):
 				path = img_dir + '/' + img
 				standard_key = self.standardize_date(img)
 				if standard_key in self.key_set:		# really a good idea?
-					self.imgs[standard_key] = np.vstack((self.imgs[standard_key], cv.imread(path)))
+					#self.imgs[standard_key] = np.vstack((self.imgs[standard_key], cv.imread(path)))
+					self.imgs[standard_key] = cv.imread(path)
 				else:
 					self.imgs[standard_key] = cv.imread(path)
 				self.key_set.add(standard_key)

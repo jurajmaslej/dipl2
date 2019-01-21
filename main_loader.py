@@ -43,7 +43,8 @@ class Main_loader(Helper):
 		self.imgs_dict = self.daytime_only(self.imgs_dict)
 		print(self.err_count)
 		
-
+'''
+print('main loader exec')
 main_loader = Main_loader({'koliba': 'SYNOPs/BA_Koliba_SYNOP_2014-2016.txt', 'airport':'SYNOPs/BA_Letisko_SYNOP_2014-2016.txt' }, None)
 #main_loader.create_camera_dict()
 
@@ -59,4 +60,4 @@ print 'compare koliba'
 main_loader.compare_dicts(main_loader.synops_koliba)
 print 'compare avg'
 main_loader.compare_dicts(main_loader.synops_avg)
-
+'''

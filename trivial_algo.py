@@ -7,6 +7,8 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
+from sklearn import tree
+from sklearn.metrics import accuracy_score
 
 class Trivial_algo(Helper):
 	
@@ -14,19 +16,20 @@ class Trivial_algo(Helper):
 		Helper.__init__(self)
 		self.main_folder = main_folder
 		self.histograms = Hsv()
-		self.histo_dict = {}
+		self.hist_dict = {}
 		if init_loader:
-			main_loader = Main_loader({'koliba': 'SYNOPs/BA_Koliba_SYNOP_2014-2016.txt', 'airport':'SYNOPs/BA_Letisko_SYNOP_2014-2016.txt' }, None)
-			main_loader.create_synops_dict()
-			main_loader.load_obj('imgs')
-			main_loader.strip_to_datetime()
+			self.main_loader = Main_loader({'koliba': 'SYNOPs/BA_Koliba_SYNOP_2014-2016.txt', 'airport':'SYNOPs/BA_Letisko_SYNOP_2014-2016.txt' }, None)
+			self.main_loader.create_synops_dict()
+			self.main_loader.load_obj('imgs')
+			self.main_loader.strip_to_datetime()
 		
 	def iterate_year(self):
 		years = os.listdir(self.main_folder)
-		#print(years)
 		for y in years:
-			self.iterate_month(y)
-			return
+			print(y)
+			if int(y) < 2017:
+				self.iterate_month(y)
+			#return
 	
 	def iterate_month(self, year):
 		months = [self.main_folder + '/' + year +'/' + m for m in os.listdir(self.main_folder + '/' + year)]
@@ -34,7 +37,7 @@ class Trivial_algo(Helper):
 		for m in months:
 			print('month ' + str(m))
 			self.iterate_days(m)
-			return
+			#return
 			
 	def iterate_days(self, year_month):
 		'''
@@ -48,11 +51,64 @@ class Trivial_algo(Helper):
 				path = img_dir + '/' + img
 				img_read = cv.imread(path)
 				histo = self.histograms.histogram_hsv(img_read)
+				if histo is None:
+					print path
+					break
 				standard_key = self.standardize_date(img)
-				self.hist_dict[]
-				
+				self.hist_dict[standard_key] = histo
+				#print(standard_key)
+				if img_read.shape != (150,150,3):
+					print(img_read.shape)
 				#return
+			
+	def iterate_dataset(self):
+		print(len(set(self.hist_dict.keys())))
+		for k in self.hist_dict.keys():
+			print(k)
+			print(self.main_loader.synops_avg[k])
+			
+	def create_tree(self):
+		clf = tree.DecisionTreeClassifier()
+		
+		common_keys = set(self.hist_dict.keys()).intersection(set(self.main_loader.synops_avg.keys()))
+		train = set()
+		validate= set()
+		for i in common_keys:
+			if '201502'  in i:
+				validate.add(i)
+			else:
+				train.add(i)
+		print('train size ' + str(len(train)))
+		print('validate size ' + str(len(validate)))
+		hist_sorted = [self.hist_dict[key] for key in sorted(train)]
+		synops_sorted = [int(self.main_loader.synops_koliba[key]) for key in sorted(train)]
+		hist_sorted_v =  [self.hist_dict[key] for key in sorted(validate)]
+		synops_sorted_v = [int(self.main_loader.synops_koliba[key]) for key in sorted(validate)]
+		clf.fit(hist_sorted, synops_sorted)
+		
+		y_pred = list(clf.predict(hist_sorted_v))
+		y_true = synops_sorted_v
+		print(accuracy_score(y_true, y_pred))
+		
+		self.absolute_results(y_true, y_pred)
+		
+	def absolute_results(self, y_true, y_predict):
+		err = 0
+		rel_err = 0
+		for t,p in zip(y_true, y_predict):
+			if t != p:
+				err+=1
+			rel_err += abs(t - p)
+			
+		rel_err = rel_err / len(y_true)
+		print('abs error count on size ' + str(len(y_true)))
+		print(err)
+		print('relative err count')
+		print(rel_err)
+		
+		
 				
-				
-t_algo = Trivial_algo('fisheyes', False)
+t_algo = Trivial_algo('fisheyes', True)
 t_algo.iterate_year()
+#t_algo.iterate_dataset()
+t_algo.create_tree()
