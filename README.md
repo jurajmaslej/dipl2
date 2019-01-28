@@ -50,3 +50,13 @@ výpočty potrebné pre spracovanie dát, bude poskytnuté.
  - odkazy v dokumente prezent.pdf
 
 ## V súčasnosti dáta nie sú na githube (pamäťové obmedzenie)
+
+
+## Beh programu
+
+Záznam z behu programu trivial_algo.py
+
+Algoritmus nemá žiaden grafický výstup, teda tvorba animácie v tejto fáze nemá odvôvodnenie.
+Na validačnej vzorke 386 fotiek spraví algoritmus chybu 320 krát, pričom priemerná výška tejto chyby sú 2/8
+ <img src="trivial_algo.png" alt="hi" class="inline"/>
+
