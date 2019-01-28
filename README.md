@@ -43,11 +43,7 @@ výpočty potrebné pre spracovanie dát, bude poskytnuté.
 - klasifikácia oblačnosti pomocou náhodného stromu
 
 ### Literatúra
- Ryo Onishi, Deep convolutional neural network for cloud estimation from snapshot camera images, 2017<br>
- Le Goff, Deep learning for cloud detection, 2017<br>
- Zafarifar, Weda, Horizon detection, 2008<br>
- Goodfellow, Deep Learning. 2016
- - odkazy v dokumente prezent.pdf
+Celý zoznam literatúry sa nachádza v dokumente first_chapter.pdf
 
 ## V súčasnosti dáta nie sú na githube (pamäťové obmedzenie)
 
