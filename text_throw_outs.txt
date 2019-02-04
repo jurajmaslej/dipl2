@@ -1,0 +1,56 @@
+###########################################################################
+###########################################################################
+###########################################################################
+
+\paragraph{Ekvivariancia} \mbox{}\\
+Funkcia $f$ je ekvivariantná k funkcii $T$ ak platí:
+ \begin{equation}
+ f(T(x)) = T(f(x))
+ \end{equation}
+ Inak povedané, vykonanie transformácie (funkcie $T$) na $x$, je ekvivalentné k výsledku ak aplikujeme transformáciu na $f(x)$.
+ \par
+Zdieľanie parametrov zabezpečuje konvolučnej sieti vlastnosť nazývanú ekvivariancia k translácii. Ekvivariantná funkcia znamená, že ak sa vstup do funkcie zmení jedným smerom, zvyší alebo zníži, výstup sa upraví rovnakým smerom. Pre ekvivariantné funkcie platí 
+$ f(g(x)) = g(f(x)) $. Pre príklad ekvivariancie v konvolučnej sieti uvažujme funkciu $ C() $. Nech $ C() $ určuje hodnotu modrej na RGB škále pre pixel na pozícií x,y. Ďalej uvažujme funkciu $ g() $, takú že $ g(C) = C^{\prime} $ , pričom $ C^{\prime}(x,y) = C(x-1, y) $. Táto funkcia posúva každý pixel o jeden pixel doprava. Ak použijeme túto transformáciu na vstup, a potom použijeme konvolúciu, teda funkciu C(x,y). Výsledok bude rovnaký ako v prípade ak najprv vypočítame funkciu C a potom tranformáciu.
+V prípade časového radu ako vstupu to znamená, že konvolúcia vyprodukuje časový rad, ktorý ukazuje kedy sa jednotlivé javy alebo vlastnosti zachytené kernelom vyskytli. 
+Pre obrazové dáta ako vstup konvolúcia vytvorí 2 dimenzionálnu mapu výskytu javov zachytených kernelom. Ak objekt vo vstupných dátach zmení polohu, výskyt na ňom zachytených javov sa vo výslednej mape taktiež posunie.
+
+
+###########################################################################
+###########################################################################
+###########################################################################
+
+
+\paragraph{Spätná propagácia chyby} \mbox{}\\
+
+Metóda prvykrát navrhnutá Werbosom(1974) \cite{WerbosBackprop} na úpravu váh v neurónovej sieti. Kombinuje metódu klesajúceho gradientu s algoritmom na iteráciu vrstvami siete na výpočet gradientu chýb v sieti, ktorý je potrebný pre jeho znižovanie.
+
+Cieľom tejto metódy je úprava váh tak, aby sa nový výpočet siete priblížil požadovanému výstupu. Tým sa zároveň zníži celková chyba výstupu siete.
+
+Pri výpočte postupujeme od výstupnej, poslednej, vrstvy. Potrebujeme zistiť nakoľko zmena jednotlivých váh vchádzajúcich do výstupnej vrstvy ovplyvňuje celkovú chybu siete. Uvažujme váhu vchádzajúcu do neurónu, označme ju w5. Použitím reťazového pravidla dostávame:
+
+\begin{equation}
+\frac{\partial E_{total}}{\partial \omega_5}  = \frac{\partial E_{total}}{\partial out_{o1}} \frac{\partial out_{o1}}{\partial net_{o1}} \frac{\partial net_{o1}}{\partial \omega_5}
+\end{equation}
+
+Vizualizácia výpočtu na sieti:
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=10cm]{images/dipl_backprop}
+	\caption{backpropagation}
+	\label{backpropagation}
+\end{figure}
+\cite{MazurBackprop}
+
+\pagebreak
+Pre výpočet tejto rovnice potrebujeme postupne vypočítať jednotilvé výrazy. Začneme výpočtom zmeny chyby k zmene celkového výstupu, teda $ out_{o1} $. Ten vypočítame ako -$ (target_{o1}- out_{o1} ) $.
+Kedže počítame parciálnu deriváciu vzhľadom k $ out_{o1} $, zmena chyby vzhľadom na $ out_{o2} $ je nulová.
+Ďalej postupujeme k výpočtu  zmeny $ out_{o1} $ vzhľadom k vstupu do neurónu ( $ net_1 $). Musíme poznať parciálnu deriváciu aktivačnej funkcie v neuróne Ako aktivačnú funkciu sme použili logistickú funkciu, ktorej derivácia je $ \frac{1}{(1+e**-net_{o1})} $. Teda vieme vypočítať parciálnu deriváciu $ out_{o1} $ podľa $ net_{o1} $. 
+Posledným členom je zmena $ net_{o1} $ vzhľadom k váhe $ w_5 $. Postupujeme rovnako ako v predchádzajúcom člene. 
+Následne všetky 3 členy vynásobíme, tým dostaneme zmenu celkovej chyby vzhľadom k váhe $ w_5 $.
+Pre znižovanie chyby odčítame vypočítanú hodnotu od váhy $ w_5 $, pre postupnú zmenu hodnotu ešte pred odčítaním upravíe vynásobením rýchlosťou učenia $ \alpha $.
+Tento postup opakujeme pre všetky váhy. Obdobne postupujeme pre ďalšie vrstvy siete.
+
+###########################################################################
+###########################################################################
+###########################################################################
+
