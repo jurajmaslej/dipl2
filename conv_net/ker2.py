@@ -43,18 +43,16 @@ def run_ker2(img_name):
 	output_images = model.predict(input_images)
 
 	output_image = output_images[0].reshape((rows,cols))
-	np.amax(output_image)
-	np.amin(output_image)
-	txt_fname = img_name[:-5] + '.txt'
-	np.savetxt(txt_fname, output_image, fmt='%f')
+	#np.amax(output_image)
+	#np.amin(output_image)
+	#txt_fname = img_name[:-5] + '.txt'
+	#np.savetxt(txt_fname, output_image, fmt='%f')
 
 	output_image = abs(output_image);
 	output_image = cv2.normalize(output_image,None,0,255,cv2.NORM_MINMAX)
 	output_image = np.uint8(output_image)
-	cv2.imwrite('edge-horizon.jpg',output_image)
+	print(img_name)
+	cv2.imwrite('{}-edge-horizon.jpg'.format(img_name[:-5]),output_image)
 
-	#cv2.imshow('lena',output_image)
-	#cv2.waitKey(0)
-	#cv2.destroyWindow('lena')
 
 #quit()

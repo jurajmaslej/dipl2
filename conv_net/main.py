@@ -21,10 +21,12 @@ class Simple_conv:
 	def load_imgs(self):	
 		images = []
 		onlyfiles = [f for f in listdir(self.path_to_img) if isfile(join(self.path_to_img, f))]
+		print('onlyfiles')
+		print(onlyfiles)
 		for name in onlyfiles:
 			if name[-4:] == 'jpeg':
 				print('name ', name)
-				ker2.run_ker2(self.path_to_img + name)
+				#ker2.run_ker2(self.path_to_img + name)
 				ker3.create_model(name, name[:-4] + 'txt', self.path_to_img, self.my_path)
 				return
 			
