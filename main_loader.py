@@ -22,13 +22,22 @@ class Main_loader(Helper):
 		lc = Load_camera('fisheyes')
 		lc.iterate_year()
 		lc.save_obj(lc.imgs, 'imgs' )
-		print(lc.key_c)
-		print('key set ' + str(len(lc.key_set)))
+		print('write to imgs dict csv')
+		lc.write_to_file()
+		print('key set ' + str(len(lc.imgs.keys())))
 		
 	def load_obj(self, name):
 		with open('obj/' + name + '.pkl', 'rb') as f:
 			self.imgs_dict = pickle.load(f)
+			
+	def load_camera_dict(self):
+		print('loading dict')
 		
+		with open('imgs_dict.csv', 'r') as f:
+			for key in self.imgs_dict.keys():
+				print(f.read())
+				break
+
 	def compare_dicts(self, synops):
 		imgs_keys = set(self.imgs_dict.keys())
 		synops_keys = set(synops.keys())
@@ -42,6 +51,10 @@ class Main_loader(Helper):
 		#print('size of keyset ' + str(len(self.imgs_dict.keys())))
 		self.imgs_dict = self.daytime_only(self.imgs_dict)
 		print(self.err_count)
+		
+
+#main_loader = Main_loader({'koliba': 'SYNOPs/BA_Koliba_SYNOP_2014-2016.txt', 'airport':'SYNOPs/BA_Letisko_SYNOP_2014-2016.txt' }, None)
+#main_loader.create_camera_dict()
 		
 '''
 print('main loader exec')

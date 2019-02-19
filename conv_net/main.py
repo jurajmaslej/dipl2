@@ -26,7 +26,7 @@ class Simple_conv:
 		for name in onlyfiles:
 			if name[-4:] == 'jpeg':
 				print('name ', name)
-				#ker2.run_ker2(self.path_to_img + name)
+				ker2.run_ker2(self.path_to_img + name)
 				ker3.create_model(name, name[:-4] + 'txt', self.path_to_img, self.my_path)
 				return
 			

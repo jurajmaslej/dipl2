@@ -37,7 +37,7 @@ class Trivial_algo(Helper):
 		for m in months:
 			print('month ' + str(m))
 			self.iterate_days(m)
-			#return
+			
 			
 	def iterate_days(self, year_month):
 		'''
@@ -55,12 +55,13 @@ class Trivial_algo(Helper):
 					print path
 					break
 				standard_key = self.standardize_date(img)
-				self.hist_dict[standard_key] = histo
-				#print(standard_key)
+				if standard_key in self.hist_dict.keys():
+					self.hist_dict[standard_key] = np.vstack((self.hist_dict[standard_key], [histo]))
+				else:
+					self.hist_dict[standard_key] = [histo]
 				if img_read.shape != (150,150,3):
 					print(img_read.shape)
-				#return
-			
+					
 	def iterate_dataset(self):
 		print(len(set(self.hist_dict.keys())))
 		for k in self.hist_dict.keys():
@@ -80,7 +81,7 @@ class Trivial_algo(Helper):
 				train.add(i)
 		print('train size ' + str(len(train)))
 		print('validate size ' + str(len(validate)))
-		hist_sorted = [self.hist_dict[key] for key in sorted(train)]
+		hist_sorted = [self.hist_dict[key] for key in sorted(train)]	# access histograms from hist_dict based on cmn keys with synops
 		synops_sorted = [int(self.main_loader.synops_koliba[key]) for key in sorted(train)]
 		hist_sorted_v =  [self.hist_dict[key] for key in sorted(validate)]
 		synops_sorted_v = [int(self.main_loader.synops_koliba[key]) for key in sorted(validate)]
@@ -89,7 +90,48 @@ class Trivial_algo(Helper):
 		y_pred = list(clf.predict(hist_sorted_v))
 		y_true = synops_sorted_v
 		print(accuracy_score(y_true, y_pred))
+		self.absolute_results(y_true, y_pred)
 		
+	def flatten_dset(self):
+		common_keys = set(self.hist_dict.keys()).intersection(set(self.main_loader.synops_avg.keys()))
+		train = set()
+		validate= set()
+		for i in common_keys:
+			if '201502'  in i:
+				validate.add(i)
+			else:
+				train.add(i)
+		print('train size ' + str(len(train)))
+		print('validate size ' + str(len(validate)))
+		
+		hist_sorted = list()
+		synops_sorted = list()
+		for k in sorted(train):
+			for v in self.hist_dict[k]:
+				hist_sorted.append(v)
+				synops_sorted.append(int(self.main_loader.synops_koliba[k]))
+				
+		hist_sorted_v = list()
+		synops_sorted_v = list()
+		for k in sorted(validate):
+			for v in self.hist_dict[k]:
+				hist_sorted_v.append(v)
+				synops_sorted_v.append(int(self.main_loader.synops_koliba[k]))
+				
+		print('sizes:')
+		print(len(hist_sorted))
+		print(len(synops_sorted))
+		print(len(hist_sorted_v))
+		print(len(synops_sorted_v))
+		
+		self.fit_tree(hist_sorted, synops_sorted, hist_sorted_v, synops_sorted_v)
+		
+	def fit_tree(self, hist_sorted, synops_sorted, hist_sorted_v, synops_sorted_v):
+		clf = tree.DecisionTreeClassifier()
+		clf.fit(hist_sorted, synops_sorted)
+		y_pred = list(clf.predict(hist_sorted_v))
+		y_true = synops_sorted_v
+		print(accuracy_score(y_true, y_pred))
 		self.absolute_results(y_true, y_pred)
 		
 	def absolute_results(self, y_true, y_predict):
@@ -110,5 +152,6 @@ class Trivial_algo(Helper):
 				
 t_algo = Trivial_algo('fisheyes', True)
 t_algo.iterate_year()
+t_algo.flatten_dset()
 #t_algo.iterate_dataset()
-t_algo.create_tree()
+#t_algo.create_tree()

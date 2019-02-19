@@ -32,7 +32,6 @@ class Load_camera(Helper):
 		#print(years)
 		for y in years:
 			self.iterate_month(y)
-			#return
 	
 	def iterate_month(self, year):
 		months = [self.main_folder + '/' + year +'/' + m for m in os.listdir(self.main_folder + '/' + year)]
@@ -42,7 +41,6 @@ class Load_camera(Helper):
 			#self.iterate_days_for_histo_creation(m)
 			#self.iterate_days(m)
 			self.create_standardized_dict(m)
-			#return
 			
 	def iterate_days(self, year_month):
 		'''
@@ -129,23 +127,37 @@ class Load_camera(Helper):
 			pass
 			return None
 			
-	def create_standardized_dict(self, year_month):
+	def create_standardized_dict(self, year_month, one_photo_per_hour = False):
 		'''
 		create dict with keys same as dict for synops
 		called from iterate_month
+		
+		one ph per hour: we have multiple shots falling to same hour, which one to choose?
+		14.2. using format:
+		do vstack
+		[[first shot],[second shot]........]
+		TODO: change further code to reflect this change
 		'''
 		print('standardize_dict')
 		days = os.listdir(year_month)
 		y_m_d = [year_month + '/' + d for d in days]
+		ind = 0
+		indl = dict()
 		for img_dir in y_m_d:
 			for img in os.listdir(img_dir):
 				path = img_dir + '/' + img
 				standard_key = self.standardize_date(img)
-				if standard_key in self.key_set:		# really a good idea?
-					#self.imgs[standard_key] = np.vstack((self.imgs[standard_key], cv.imread(path)))
-					self.imgs[standard_key] = cv.imread(path)
+				if standard_key in self.key_set:
+					
+					if one_photo_per_hour:
+						self.imgs[standard_key] = cv.imread(path)
+					else:
+						self.imgs[standard_key] = np.vstack((self.imgs[standard_key], [cv.imread(path)]))
+					ind += 1
+					indl[standard_key] += 1 
 				else:
-					self.imgs[standard_key] = cv.imread(path)
+					self.imgs[standard_key] = [cv.imread(path)]
+					indl[standard_key] = 0
 				self.key_set.add(standard_key)
 				
 	def write_to_file(self):
@@ -162,4 +174,3 @@ class Load_camera(Helper):
 			
 
 #print lc.round_time(datetime.datetime(2012,12,31,23,44,59,1234),roundTo=60*60)
-

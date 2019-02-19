@@ -32,7 +32,7 @@ def create_model(img, img_txt, dir_of_images, dir_save_to):
 	num_epochs = 100
 	
 	
-	for i in range(50,80,100):
+	for i in range(10,30,40):
 		num_epochs = i
 		model.fit(samples_inp, samples_out, batch_size=1, epochs = num_epochs)
 
