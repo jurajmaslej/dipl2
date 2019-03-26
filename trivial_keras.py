@@ -13,6 +13,9 @@ from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Dense, Conv2D, Flatten
 
+#resnet
+from keras.applications.resnet50 import ResNet50
+
 class Trivial_algo(Helper):
 	
 	def __init__(self, main_folder, init_loader=True, create_syn_dict=True, create_cam_dict=False):

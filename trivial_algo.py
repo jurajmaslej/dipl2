@@ -128,6 +128,10 @@ class Trivial_algo(Helper):
 		
 	def fit_tree(self, hist_sorted, synops_sorted, hist_sorted_v, synops_sorted_v):
 		clf = tree.DecisionTreeClassifier()
+		print(len(hist_sorted))
+		print('llen')
+		print(len(hist_sorted[0]))
+		print(hist_sorted[0].shape)
 		clf.fit(hist_sorted, synops_sorted)
 		y_pred = list(clf.predict(hist_sorted_v))
 		y_true = synops_sorted_v
