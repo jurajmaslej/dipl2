@@ -7,14 +7,16 @@ from os import listdir
 
 class Hsv:
 	
-	def __init__(self):
+	def __init__(self, examples_init=True):
 		'''
 		really deletes some shit
 		changed error evaluation method, 
 		now (29.11. 01:50) almost perfect
 		'''
-		self.grass_histo_list = self.histogram_list('grass_examples')
-		self.sky_histo_list = self.histogram_list('sky_examples')
+		if examples_init:
+			self.grass_histo_list = self.histogram_list('grass_examples')
+			self.sky_histo_list = self.histogram_list('sky_examples')
+		pass
 	
 	def load_img(self, img):
 		return cv.imread(img)
