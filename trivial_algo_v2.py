@@ -17,8 +17,11 @@ from tabulate import tabulate
 
 class Trivial_algo():
 	
-	def __init__(self):
-		l = Loader('bright/list.txt', 'bright', 'formatted_pics', new_load = False)
+	def __init__(self, rgb=False):
+		if rgb:
+			l = Loader('bright2/list.txt', 'bright2', 'formatted_pics2_224_rgb', new_load = False)
+		else:
+			l = Loader('bright/list.txt', 'bright', 'formatted_pics', new_load = False)
 		self.loader_df, self.train, self.validate, self.test = l.load_csv_df('df.csv')
 		self.hst_script = Hsv(examples_init=False)
 		
@@ -77,8 +80,9 @@ class Trivial_algo():
 	
 	
 t_alg = Trivial_algo()
-t_alg.load_photos('formatted_pics')
+t_alg.load_photos('pano_cropped')
 train, test = t_alg.split_dataset()
+print(train.hst.iloc[0])
 #t_alg.create_tree(train, test)
 #t_alg.create_svm(train, test)
-t_alg.rbf_params(train, test)
+#t_alg.rbf_params(train, test)

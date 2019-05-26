@@ -130,6 +130,8 @@ class Rbf_params():
 		# just applying it on the test set.
 		'''
 		scaler = StandardScaler()
+		print(X.shape)
+		return
 		X = scaler.fit_transform(X)
 		
 		# #############################################################################
@@ -139,11 +141,12 @@ class Rbf_params():
 		# 10 is often helpful. Using a basis of 2, a finer
 		# tuning can be achieved but at a much higher cost.
 
-		C_range = np.logspace(-2, 10, 10)
-		gamma_range = np.logspace(-9, 3, 10)
+		C_range = np.logspace(7, 16, 4)
+		gamma_range = np.logspace(-4, 1, 4)
 		param_grid = dict(gamma=gamma_range, C=C_range)
 		#print(param_grid)
 		cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+		print("grid search started")
 		grid = GridSearchCV(SVC(), param_grid=param_grid, cv=cv)
 		grid.fit(X, y)
 		
@@ -173,5 +176,5 @@ class Rbf_params():
 		plt.xticks(np.arange(len(gamma_range)), gamma_range, rotation=45)
 		plt.yticks(np.arange(len(C_range)), C_range)
 		plt.title('Validation accuracy')
-		plt.savefig('svm_acc.png')
+		plt.savefig('svm_acc_rgb_test.png')
 		plt.show()
